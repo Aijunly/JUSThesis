@@ -1,0 +1,45 @@
+% -*- coding=utf-8 -*-
+%%% =========== 文档类 ============ %%%
+%	毕业论文选取ctexbook比较合适
+%	twoside命令，设置为双面排版，左右页边距会根据奇偶页自动调整
+%	12pt，字体大小，默认为10pt
+%	openright命令，默认openright，即为新的一章在右手边开始
+\documentclass[twoside, 12pt, openright,AutoFakeBold,fontset=ubuntu]{ctexbook}	% 文档类型
+% AutoFakeBold（它会传递给 xeCJK 和 fontspec）来打开全局的伪粗体功能，从而可以使用加粗的宋体。
+% 因为TeX本就没有粗体形式的宋体，伪粗体可以模仿得很像。
+% fontset 在book下的ctex中，有如下几个设置：
+% adobe, fandol, 
+% founder, mac, macnew, macold, windows
+% ubuntu,windowsold
+% 导入设置
+\input{boyogala-setting.tex}
+
+
+%=================================正文内容=====================================================
+\begin{document}
+    \frontmatter                                	% 关闭章节序号， 页码默认使用小写罗马数字
+        \pagestyle{empty}                           % 设置封面和原创性声明的页面样式为空
+        \include{tex/boyogala1_cover}               % 载入封面
+        \include{tex/boyogala2_statement}           % 载入原创性声明
+        \pagestyle{plain}
+        \pagenumbering{Roman}						% 切换页码至大写罗马数字显示
+        \let\cleardoublepage\clearpage
+        \include{tex/boyogala3_abstract_cn}         % 载入中文摘要
+        \include{tex/boyogala4_abstract_en}         % 载入英文摘要
+        \pagestyle{plain}
+        \setcounter{page}{1}
+        \pagenumbering{Roman}        
+        \tableofcontents                    		% 载入目录
+        \clearpage									% 跳到目录下一页
+        \thispagestyle{plain}						% 显示最后一页的页码
+    \mainmatter                                 	% 开启章节序号计数，重置页码，页码使用阿拉伯数字
+        \fancypagestyle{plain}{\pagestyle{myfancy}} % 设置默认的页面类型plain为自定义样式fancy
+        \pagestyle{myfancy}							% 设置页面布局为自定义的myfancy
+        \include{tex/boyogala5_chapters}            % 载入章节内容
+    \backmatter                                 	% 关闭章节序号，对页码没有影响
+        \include{tex/boyogala6_conclusion}          % 载入总结
+        \include{tex/boyogala7_reference}			% 载入参考文献
+        \include{tex/boyogala9_thanks}           	% 载入致谢
+        \include{tex/boyogala8_Appendix}            % 载入附录        
+\end{document}
+

@@ -1,0 +1,228 @@
+%=================================宏包管理=====================================================
+%	和配置有关的宏包在具体的配置区引用，这里只引用正文区用到的宏包
+\usepackage{wallpaper}	% 封面背景包
+\usepackage{amsmath,mathtools,amsthm,amsfonts,amssymb,bm}	% AMS包
+\usepackage{color}  %字体背景颜色包
+%\usepackage{pifont}
+%=================================页面边距=====================================================
+%	geometry宏包使用教程：http://www.ctex.org/documents/packages/layout/geometry.htm
+%	A4纸宽210mm，长297mm
+%	left + right + textwidth = 210
+%	top + bottom + textheight = 297
+%	headheight：页眉文字高度，应当小于等于top
+\usepackage{geometry}    % 页面尺寸与边距
+\usepackage{fancyhdr}    % 自定义页眉页脚
+\usepackage{calc}        % 支持长度的算术运算
+\usepackage{anyfontsize} % 任意字号支持（用于精确字号）
+\geometry{%
+	paperwidth  = 210mm,
+	paperheight = 297mm,
+	twoside,
+	top         = 30mm,
+	bottom      = 25mm,
+	inner       = 28mm,
+	outer       = 25mm,
+	headheight  = 14.5pt,   % 页眉文字高（约5.1mm）
+	headsep     = 4.9mm,    % 10mm - 5.1mm ≈ 4.9mm（页眉顶距上缘20mm）
+	footskip    = 9.6mm,    % 使页脚顶部距下缘约17.5mm（需打印后校准）
+}
+
+%=================================页眉页脚=====================================================
+%	fancy宏包使用教程：http://www.ctex.org/documents/packages/layout/fancyhdr.htm
+%	fancypagestyle{样式名}可以自定义样式，并通过\pagestyle{样式名}和\thispagestyle{样式名}来使用
+%   \leftmark可以获取不带星号的chapter标题内容，\rightmark可以获取到不带星号的section标题内容
+%   L, C, R分别表示左中右，
+%   E, O分别表示偶数页和奇数页
+\usepackage{fancyhdr}								% 页眉页脚包
+\usepackage{fontspec}
+\setmainfont{Times New Roman} % 设置英文字体
+\usepackage{setspace} % 段落行距包
+\setstretch{1.5} % 设置行距为1.5倍行距
+\raggedbottom
+
+\usepackage{indentfirst} %段落首行缩进命令包
+\setlength{\parindent}{2em}
+\fancypagestyle{myfancy}{%
+	\fancyhf{}	                                    % 清空所有定义
+	\fancyfoot[CE,CO]{\thepage}                     % 设置页脚为当前页码
+	\fancyhead[CE]{江苏科技大学本科毕业论文（设计）}        % 设置偶数页居中的页眉为江苏科技大学本科毕业论文（设计）
+	\fancyhead[CO]{江苏科技大学本科毕业论文（设计）}
+	%\fancyhead[CO]{\nouppercase{\leftmark}}         % 设置奇数页居中的页眉为当前章节名
+	\renewcommand{\headrule}{%                      % 重定义headrule来实现双页眉装饰线效果
+		\makebox[0pt][l]{\rule[.7\baselineskip]{\headwidth}{0.89pt}}%
+	%	\rule[.6\baselineskip]{\headwidth}{0.4pt}\vskip-.8\baselineskip
+	}
+}
+
+%=================================章节标题=====================================================
+\ctexset{
+	chapter = {
+		name        = {},
+		number      = \arabic{chapter},
+		format      += \heiti\zihao{-3}\centering,  % 小三黑体居中
+		beforeskip  = 10pt,   % 段前1.5行，设置30pt 
+		afterskip   = 30pt,   % 段后1.5行
+		fixskip     = true,
+	},
+	section = {
+		format      += \heiti\zihao{4}\raggedright,  % 四号黑体居左
+		beforeskip  = 20pt,   % 段前1.0行
+		afterskip   = 20pt,
+		fixskip     = true,
+	},
+	subsection = {
+		format      += \heiti\zihao{-4}\raggedright, % 小四黑体居左
+		beforeskip  = 10pt,   % 段前0.5行
+		afterskip   = 10pt,
+		fixskip     = true,
+	},
+	subsubsection = {
+		format      += \heiti\zihao{-4}\raggedright, % 小四黑体居左(款)
+		beforeskip  = 10pt,
+		afterskip   = 10pt,
+		fixskip     = true,
+	},
+}
+
+%=================================目录设置=====================================================
+%	titletoc宏包使用教程：https://blog.csdn.net/golden1314521/article/details/39926135
+%						 https://blog.csdn.net/l_changyun/article/details/87431805
+%
+\usepackage{titletoc}
+\usepackage{titlesec}
+\renewcommand{\contentsname}{目\hspace{2em}录}
+\setcounter{tocdepth}{2}      % 显示到 subsection(第3级)
+\setcounter{secnumdepth}{3}
+\ctexset{chapter/name = {第,章}}  % 章号显示"第X章"
+
+%--------------------------------------------------------
+% 一级(章 chapter)——顶格
+%--------------------------------------------------------
+\titlecontents%	章
+{chapter}[4em]
+{\heiti\zihao{-4}\vspace*{-4pt}}	% 章之间的上下间距  \bfseries
+{\contentslabel{4em}}
+{\hspace*{-4em}}
+{~\titlerule*[0.6pc]{$.$}~\contentspage}
+
+
+%%--------------------------------------------------------
+%% 二级(节 section)——缩进一格
+%%--------------------------------------------------------
+\titlecontents%	节
+{section}[3em]
+{\zihao{-4}\vspace*{-4pt}}
+{\contentslabel{2em}}
+{\hspace*{-2em}}
+{~\titlerule*[0.6pc]{$.$}~\contentspage}
+
+%%--------------------------------------------------------
+%% 三级(条 subsection)——缩进两格
+%%--------------------------------------------------------
+\titlecontents%	小节
+{subsection}[6em]
+{\zihao{-4}\vspace*{-4pt}}
+{\contentslabel{3em}}
+{\hspace*{-2em}}
+{~\titlerule*[0.6pc]{$.$}~\contentspage}
+ 
+
+%=================================参考文献=====================================================
+%   biblatex宏包使用教程：
+%	https://www.overleaf.com/learn/latex/Bibliography_management_with_biblatex
+%
+\usepackage[%
+backend=biber,				% 设置使用biber进行编译，也可以使用bibtex，但是功能更少
+style=gb7714-2015,			% 设置风格样式为国家标准gb7714-2015
+sorting=none,%设置排序按照年份，名字，标题进行排序，若想按照引用顺序排序，将其设置为none即可
+gbnamefmt=lowercase           % 将作者名全部大写改为仅首字母大写
+]{biblatex}       			% 参考文献包
+\addbibresource{bib/ref.bib}    % 加载参考文献的文件
+
+%=================================定理环境=====================================================
+% 	自定义定理类环境（定义，引理，定理，推论，例，注）
+% 		定理环境命令：\newtheorem{name}[counter]{text}[section]
+% 			name:		标识这个环境的关键字（用于编程）
+%			counter:	（可选）编号计数器，默认使用自己的计数器，可以传入其他环境的name来共享计数器
+% 			text:		真正在文档中打印出来的定理环境的名字
+% 			section:	（可选）定理编号依赖的某个章节层次，默认不依赖。
+%
+\newtheorem{theorem}{\hskip 2em{定理}}[section]
+\newtheorem{definition}[theorem]{\hskip 2em{定义}}
+\newtheorem{lemma}[theorem]{\hskip 2em{引理}}
+\newtheorem{corollary}[theorem]{\hskip 2em{推论}}
+% 例，注各自独立编号，无需考虑编号共享的问题，直接创建。证明关键词加粗
+\newtheorem{example}{\hskip 2em{例}}[chapter]
+\newtheorem{remark}{\hskip 2em{注}}[chapter]
+\renewcommand{\proofname}{\hskip 2em \bf 证明}
+
+% 去掉定理后面的小点，不建议使用（默认注释掉）
+% \usepackage{xpatch}
+% \makeatletter
+% \AtBeginDocument{\xpatchcmd{\@thm}{\thm@headpunct{.}}{\thm@headpunct{}}{}{}}
+% \makeatother
+
+% 公式按section编号，若想按chapter编号，注释掉这条即可
+% \numberwithin{equation}{section}
+
+%=================================图表环境=====================================================
+% enumitem宏包设置参考自江苏科技大学学位论文模板
+\usepackage[inline]{enumitem}					% 列表工具包
+\usepackage{graphicx,ragged2e}					% 插图工具包
+\usepackage{subcaption}							% 子图标题包
+\usepackage{bicaption}							% 图片标题包
+\setlist{%	设置列表样式
+	topsep=0.3em, 			% 列表顶端的垂直空白
+	partopsep=0pt, 			% 列表环境前面紧接着一个空白行时其顶端的额外垂直空白
+	itemsep=0ex plus 0.1ex, % 列表项之间的额外垂直空白
+	parsep=0pt, 			% 列表项内的段落之间的垂直空白
+	leftmargin=1.5em, 		% 环境的左边界和列表之间的水平距离
+	rightmargin=0em, 		% 环境的右边界和列表之间的水平距离
+	labelsep=0.5em, 		% 包含标签的盒子与列表项的第一行文本之间的间隔
+	labelwidth=2em 			% 包含标签的盒子的正常宽度；若实际宽度更宽，则使用实际宽度。
+}
+\graphicspath{figure/}		% 设置图片存放目录
+\usepackage{longtable,booktabs} % 跨页长表格
+ 
+
+%=================================代码环境=====================================================
+% 使用listings宏包来插入代码
+\usepackage{listings}	% 代码环境包
+\renewcommand{\lstlistingname}{算法}	% 重命名代码块标题为算法，例如：算法1.2
+\lstset{% 设置算法样式
+	% keywordstyle=\bfseries, % 设置关键词加粗
+	% basicstyle=\ttfamily, 	% 设置基础样式字体为等宽
+	% commentstyle=\ttfamily, % 基本和注释的字体都使用默认的等宽，而非texlive调用的中文字体
+	% showstringspaces=false, % 不显示中间的空格
+	% breaklines=true,  		% 对过长的代码自动换行
+	% frame=single  			% 边框
+    basicstyle=\small\ttfamily, % 基本字体样式（小号等宽字体）
+    keywordstyle=\color{blue}\bfseries, % 关键字样式（蓝色加粗）
+    commentstyle=\color{green!60!black}\itshape, % 注释样式（深绿斜体）
+    stringstyle=\color{red},    % 字符串样式（红色）
+    showstringspaces=false,     % 不显示字符串中的空格
+    breaklines=true,            % 自动换行
+    frame=single,               % 添加边框
+    tabsize=4                   % Tab 宽度为 4 个字符
+}
+
+%=================================引用工具=====================================================
+% hyperref宏包教程https://www.jianshu.com/p/58e7d0a6d97a
+% 实现超链接功能
+\usepackage{hyperref}	% 交叉引用包
+\hypersetup{%	设置交叉引用属性
+	colorlinks=true,	% 设置可跳转的链接为颜色，而不是方框
+	urlcolor=black,		% 设置各种链接的颜色均为黑色
+	linkcolor=black,
+	anchorcolor=black,
+	citecolor=black
+}
+
+%=================================其余设定=====================================================
+% 重新定义一些常用的数学符号
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+\newcommand{\mi}{\mathrm{i}}
+\newcommand{\md}{\mathrm{d}}
+\newcommand{\me}{\mathrm{e}}
+
