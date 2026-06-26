@@ -2,16 +2,43 @@
 %	和配置有关的宏包在具体的配置区引用，这里只引用正文区用到的宏包
 \usepackage{wallpaper}	% 封面背景包
 \usepackage{amsmath,mathtools,amsthm,amsfonts,amssymb,bm}	% AMS包
+%%%%%%%%%%%%%%%%%%%% 全局调整行间公式的上下间距 STRAT %%%%%%%%%%%%%%%%%%%%
+% \AtBeginDocument{%
+%   \setlength{\abovedisplayskip}{4pt plus 1pt minus 1pt}%
+%   \setlength{\belowdisplayskip}{4pt plus 1pt minus 1pt}%
+%   \setlength{\abovedisplayshortskip}{4pt plus 1pt}%
+%   \setlength{\belowdisplayshortskip}{4pt plus 1pt minus 1pt}%
+% }
+\usepackage{etoolbox}
+%\setlength{\abovedisplayskip}{3pt} %调节公式的上行之间的间距
+ %   \setlength{\belowdisplayskip}{3pt} %调节公式的下行之间的间距
+\newcommand{\setmydisplayskip}{%
+  \setlength{\abovedisplayskip}{3pt plus 1pt minus 1pt}%
+  \setlength{\belowdisplayskip}{3pt plus 1pt minus 1pt}%
+  \setlength{\abovedisplayshortskip}{3pt plus 1pt minus 1pt}%
+  \setlength{\belowdisplayshortskip}{3pt plus 1pt minus 1pt}%
+}
+% 在 \normalsize 之后追加我们的设置
+\apptocmd{\normalsize}{\setmydisplayskip}{}{}
+%%%%%%%%%%%%%%%%%%%% 全局调整行间公式的上下间距 END  %%%%%%%%%%%%%%%%%%%%
+
 \usepackage{color}  %字体背景颜色包
-%\usepackage{pifont}
+\usepackage{wasysym}
+% 使用：
+%\CheckedBox      % ☑ 方框中带对号
+%\Square          % ☐ 空方框
+%\XBox            % ☒ 方框中带叉
 %=================================页面边距=====================================================
 %	geometry宏包使用教程：http://www.ctex.org/documents/packages/layout/geometry.htm
 %	A4纸宽210mm，长297mm
 %	left + right + textwidth = 210
 %	top + bottom + textheight = 297
 %	headheight：页眉文字高度，应当小于等于top
+\usepackage{fancyhdr}  % 自定义页眉页脚
+%\setlength{\headheight}{26pt}
+%\addtolength{\topmargin}{-12pt}
+
 \usepackage{geometry}    % 页面尺寸与边距
-\usepackage{fancyhdr}    % 自定义页眉页脚
 \usepackage{calc}        % 支持长度的算术运算
 \usepackage{anyfontsize} % 任意字号支持（用于精确字号）
 \geometry{%
@@ -22,8 +49,9 @@
 	bottom      = 25mm,
 	inner       = 28mm,
 	outer       = 25mm,
-	headheight  = 14.5pt,   % 页眉文字高（约5.1mm）
-	headsep     = 4.9mm,    % 10mm - 5.1mm ≈ 4.9mm（页眉顶距上缘20mm）
+	headheight  = 26pt,   % 页眉文字高（约5.1mm） 14.5
+%	headsep     = 4.9mm,    % 10mm - 5.1mm ≈ 4.9mm（页眉顶距上缘20mm）
+    headsep     =   8pt,    % 数值越小，页眉离正文越近。可以试 8pt、12pt、15pt 等找到合适的
 	footskip    = 9.6mm,    % 使页脚顶部距下缘约17.5mm（需打印后校准）
 }
 
@@ -33,7 +61,6 @@
 %   \leftmark可以获取不带星号的chapter标题内容，\rightmark可以获取到不带星号的section标题内容
 %   L, C, R分别表示左中右，
 %   E, O分别表示偶数页和奇数页
-\usepackage{fancyhdr}								% 页眉页脚包
 \usepackage{fontspec}
 \setmainfont{Times New Roman} % 设置英文字体
 \usepackage{setspace} % 段落行距包
@@ -49,7 +76,7 @@
 	\fancyhead[CO]{江苏科技大学本科毕业论文（设计）}
 	%\fancyhead[CO]{\nouppercase{\leftmark}}         % 设置奇数页居中的页眉为当前章节名
 	\renewcommand{\headrule}{%                      % 重定义headrule来实现双页眉装饰线效果
-		\makebox[0pt][l]{\rule[.7\baselineskip]{\headwidth}{0.89pt}}%
+		\makebox[0pt][l]{\rule[.7\baselineskip]{\headwidth}{0.8pt}}%
 	%	\rule[.6\baselineskip]{\headwidth}{0.4pt}\vskip-.8\baselineskip
 	}
 }
@@ -60,14 +87,14 @@
 		name        = {},
 		number      = \arabic{chapter},
 		format      += \heiti\zihao{-3}\centering,  % 小三黑体居中
-		beforeskip  = 10pt,   % 段前1.5行，设置30pt 
-		afterskip   = 30pt,   % 段后1.5行
+		beforeskip  = 15pt,   % 段前1.5行，设置30pt 
+		afterskip   = 15pt,   % 段后1.5行
 		fixskip     = true,
 	},
 	section = {
 		format      += \heiti\zihao{4}\raggedright,  % 四号黑体居左
-		beforeskip  = 20pt,   % 段前1.0行
-		afterskip   = 20pt,
+		beforeskip  = 10pt,   % 段前1.0行，设置20pt
+		afterskip   = 10pt,
 		fixskip     = true,
 	},
 	subsection = {
@@ -139,6 +166,11 @@ gbnamefmt=lowercase           % 将作者名全部大写改为仅首字母大写
 ]{biblatex}       			% 参考文献包
 \addbibresource{ref.bib}    % 加载参考文献的文件
 
+%%参考文献工具，加载biblatex宏包，,其后端backend使用biber
+%\usepackage[backend=biber,style=gb7714-2025,gbfootbib=true,gbalign=gb7714-2025]{biblatex}
+%biblatex宏包的参考文献数据源即bib文件加载方式
+%\addbibresource[location=local]{references.bib}
+
 %=================================定理环境=====================================================
 % 	自定义定理类环境（定义，引理，定理，推论，例，注）
 % 		定理环境命令：\newtheorem{name}[counter]{text}[section]
@@ -147,7 +179,7 @@ gbnamefmt=lowercase           % 将作者名全部大写改为仅首字母大写
 % 			text:		真正在文档中打印出来的定理环境的名字
 % 			section:	（可选）定理编号依赖的某个章节层次，默认不依赖。
 %
-\newtheorem{theorem}{\hskip 2em{定理}}[section]
+\newtheorem{theorem}{\hskip 2em{定理}}[chapter]
 \newtheorem{definition}[theorem]{\hskip 2em{定义}}
 \newtheorem{lemma}[theorem]{\hskip 2em{引理}}
 \newtheorem{corollary}[theorem]{\hskip 2em{推论}}
@@ -188,35 +220,93 @@ gbnamefmt=lowercase           % 将作者名全部大写改为仅首字母大写
 %=================================代码环境=====================================================
 % 使用listings宏包来插入代码
 \usepackage{listings}	% 代码环境包
-\renewcommand{\lstlistingname}{算法}	% 重命名代码块标题为算法，例如：算法1.2
-\lstset{% 设置算法样式
-	% keywordstyle=\bfseries, % 设置关键词加粗
-	% basicstyle=\ttfamily, 	% 设置基础样式字体为等宽
-	% commentstyle=\ttfamily, % 基本和注释的字体都使用默认的等宽，而非texlive调用的中文字体
-	% showstringspaces=false, % 不显示中间的空格
-	% breaklines=true,  		% 对过长的代码自动换行
-	% frame=single  			% 边框
-    basicstyle=\small\ttfamily, % 基本字体样式（小号等宽字体）
-    keywordstyle=\color{blue}\bfseries, % 关键字样式（蓝色加粗）
-    commentstyle=\color{green!60!black}\itshape, % 注释样式（深绿斜体）
-    stringstyle=\color{red},    % 字符串样式（红色）
-    showstringspaces=false,     % 不显示字符串中的空格
-    breaklines=true,            % 自动换行
-    frame=single,               % 添加边框
-    tabsize=4                   % Tab 宽度为 4 个字符
-}
+\renewcommand{\lstlistingname}{代码}	% 重命名代码块标题为算法，例如：算法1.2
+%\renewcommand{\lstlistingname}{算法}	% 重命名代码块标题为算法，例如：算法1.2
+%\lstset{% 设置算法样式
+%	keywordstyle=\bfseries, % 设置关键词加粗
+%	basicstyle=\ttfamily, 	% 设置基础样式字体为等宽
+%	commentstyle=\ttfamily, % 基本和注释的字体都使用默认的等宽，而非texlive调用的中文字体
+%	showstringspaces=false, % 不显示中间的空格
+%	breaklines=true,  		% 对过长的代码自动换行
+%	frame=single  			% 边框
+%    basicstyle=\small\ttfamily, % 基本字体样式（小号等宽字体）
+%    keywordstyle=\color{blue}\bfseries, % 关键字样式（蓝色加粗）
+%    commentstyle=\color{green!60!black}\itshape, % 注释样式（深绿斜体）
+%    stringstyle=\color{red},    % 字符串样式（红色）
+%    showstringspaces=false,     % 不显示字符串中的空格
+%    breaklines=true,            % 自动换行
+%    frame=single,               % 添加边框
+%    tabsize=4                   % Tab 宽度为 4 个字符
+%}
 
+
+% Algorithms 
+\usepackage[plainruled,linesnumbered,algochapter]{algorithm2e}
 %=================================引用工具=====================================================
 % hyperref宏包教程https://www.jianshu.com/p/58e7d0a6d97a
 % 实现超链接功能
 \usepackage{hyperref}	% 交叉引用包
 \hypersetup{%	设置交叉引用属性
 	colorlinks=true,	% 设置可跳转的链接为颜色，而不是方框
-	urlcolor=black,		% 设置各种链接的颜色均为黑色
+	urlcolor=blue,		% 设置各种链接的颜色均为黑色
 	linkcolor=black,
 	anchorcolor=black,
 	citecolor=black
 }
+
+\makeatletter
+% ===== 基本中英文名称 =====
+\newcommand{\algoenname}{\textbf{Algo.}}        % 算法英文标号前缀
+\renewcommand{\algorithmcfname}{算法}            % 算法中文名称
+
+% ===== 间距设置 =====
+\setlength\AlCapSkip{1.2ex}
+\SetAlgoSkip{1pt}
+\setlength{\algoheightruledefault}{1.5pt}
+
+% ===== 标题计数器格式（带章节号）=====
+\expandafter\ifx\csname algocf@within\endcsname\relax
+  \renewcommand\thealgocf{\@arabic\c@algocf}
+\else
+  \renewcommand\thealgocf{\csname the\algocf@within\endcsname-\@arabic\c@algocf}
+\fi
+
+% ===== 标题整体居中（中英文各占一行）=====
+\renewcommand{\algocf@makecaption}[2]{%
+  \addtolength{\hsize}{\algomargin}%
+  \hskip .5\algomargin%
+  \parbox[t]{\hsize}{%
+    \centering
+    \setlength{\baselineskip}{1.5em}%
+    \AlCapFnt{}#1\algocf@typo~\AlCapFnt{}#2%
+  }%
+  \addtolength{\hsize}{-\algomargin}%
+}
+
+% ===== 双语标题命令 =====
+% #1 中文标题  #2 英文标题
+\newcommand{\AlgoBiCaption}[2]{%
+  \caption[#1]{#1\\ \algoenname\ \thealgocf~~#2}%
+  \addcontentsline{aen}{algoen}{\protect\numberline{ }{#2}}%
+}
+
+% ===== ruled 线宽 =====
+\setlength{\algoheightruledefault}{1.5pt}
+\def\@algocf@post@ruled{\kern\interspacealgoruled\hrule height1.5pt\relax}%
+\makeatother
+
+%======== 中文关键字 ========%
+\SetKwInput{KwIn}{输入}
+\SetKwInput{KwOut}{输出}
+
+
+%=========== Julia代码设置 ============================
+% 使用Julia的格式输入，需要导入
+\usepackage{jlcode}
+% 使用Julia的格式输入，或者是另外一个头文件,
+% \input{settings/julia.jl}
+% \begin{jllisting}
+% \end{jllisting}
 
 %=================================其余设定=====================================================
 % 重新定义一些常用的数学符号
@@ -225,4 +315,9 @@ gbnamefmt=lowercase           % 将作者名全部大写改为仅首字母大写
 \newcommand{\mi}{\mathrm{i}}
 \newcommand{\md}{\mathrm{d}}
 \newcommand{\me}{\mathrm{e}}
+ \DeclareMathOperator{\argmin}{argmin}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\prox}{prox}
+\DeclareMathOperator{\sign}{sign}
+
 

@@ -1,4 +1,6 @@
 % -*- coding=utf-8 -*-
+%!TEX TS-program = xelatex
+%!TEX encoding = UTF-8 Unicode
 %%% =========== 文档类 ============ %%%
 %	毕业论文选取ctexbook比较合适
 %	twoside命令，设置为双面排版，左右页边距会根据奇偶页自动调整
@@ -19,13 +21,13 @@
 \begin{document}
     \frontmatter                                	% 关闭章节序号， 页码默认使用小写罗马数字
         \pagestyle{empty}                           % 设置封面和原创性声明的页面样式为空
-        \include{tex/boyogala1_cover}               % 载入封面
-        \include{tex/boyogala2_statement}           % 载入原创性声明
+        \include{chapter/boyogala1_cover}               % 载入封面
+        \include{chapter/boyogala2_statement}           % 载入原创性声明
         \pagestyle{plain}
         \pagenumbering{Roman}						% 切换页码至大写罗马数字显示
         \let\cleardoublepage\clearpage
-        \include{tex/boyogala3_abstract_cn}         % 载入中文摘要
-        \include{tex/boyogala4_abstract_en}         % 载入英文摘要
+        \include{chapter/boyogala3_abstract_cn}         % 载入中文摘要
+        \include{chapter/boyogala4_abstract_en}         % 载入英文摘要
         \pagestyle{plain}
         \setcounter{page}{1}
         \pagenumbering{Roman}        
@@ -35,11 +37,11 @@
     \mainmatter                                 	% 开启章节序号计数，重置页码，页码使用阿拉伯数字
         \fancypagestyle{plain}{\pagestyle{myfancy}} % 设置默认的页面类型plain为自定义样式fancy
         \pagestyle{myfancy}							% 设置页面布局为自定义的myfancy
-        \include{tex/boyogala5_chapters}            % 载入章节内容
+        \include{chapter/boyogala5_chapters}            % 载入章节内容
     \backmatter                                 	% 关闭章节序号，对页码没有影响
-        \include{tex/boyogala6_conclusion}          % 载入总结
-        \include{tex/boyogala7_reference}			% 载入参考文献
-        \include{tex/boyogala9_thanks}           	% 载入致谢
-        \include{tex/boyogala8_Appendix}            % 载入附录        
+        \include{chapter/boyogala6_conclusion}          % 载入总结
+        \include{chapter/boyogala7_reference}			% 载入参考文献
+        \include{chapter/boyogala9_thanks}           	% 载入致谢
+        \include{chapter/boyogala8_Appendix}            % 载入附录        
 \end{document}
 
