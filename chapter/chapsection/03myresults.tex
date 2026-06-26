@@ -1,0 +1,180 @@
+% -*- coding=utf-8 -*-
+%!TEX TS-program = xelatex
+%!TEX encoding = UTF-8 Unicode
+\chapter{主要内容}  % \chapter{短标题}{长标题} 页眉会显示短标题，正文会显示长标题，“\\"会强制换行，”\ “会显示空格
+
+我是主要结果，章名换成您要研究得内容，此章要分几个小节，每个小节是要处理得问题.
+
+\section{向量值函数的微分}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  \begin{algorithm}[th!]
+% \SetAlgoLined
+% 	\KwIn{ The initial points: $\mathbf{y}^{0} =\mathbf{z}^{0} \in \mathbb{R}^{n}$, the relative error $\varepsilon = 10^{-8}$, {\tt IterMax} $=100n$, $\lambda = 10^{-4} $ and $\beta  =L_0 =  2\lambda_{\max} \left( \mathbf{A}^{\top} \mathbf{A} \right) $.}
+
+% 	\While{ $k < ${\tt  IterMax}  or $ \frac{\Vert \mathbf{x}^{k} - \mathbf{x}^{k-1} \Vert_2}{ \Vert \mathbf{x}^{k} \Vert_2} >\varepsilon$}{
+%  		\begin{itemize}
+%  		\item[(1)] Compute 
+% 			\[
+% 			 \mathbf{v}^{k} = \mathbf{y}^{k} -  \frac{\mathbf{z}^{k}}{\beta},
+% 			 \]
+% 		if $\beta  < \lambda \max \left\{ 	\frac{\Vert \mathbf{v}^{k} \Vert_{0} - \vert \mathcal{I}_{\max}\left( \mathbf{v}^{k} \right) \vert}{ \Vert \mathbf{v}^{k} \Vert_{1}\Vert \mathbf{v}^{k} \Vert_{\infty} } , \frac{1}{\Vert \mathbf{v}^{k} \Vert_{\infty}^{2} } \right\}$ then
+% 		\[
+% 					\beta  = L_0  + \lambda  \max \left\{ 	\frac{\Vert \mathbf{v}^{k} \Vert_{0} - \vert \mathcal{I}_{\max}\left( \mathbf{v}^{k} \right) \vert}{ \Vert \mathbf{v}^{k} \Vert_{1}\Vert \mathbf{v}^{k} \Vert_{\infty} } , \frac{1}{\Vert \mathbf{v}^{k} \Vert_{\infty}^{2} } \right\},
+% 		\]
+% 		else $\beta  = L_0$ end.
+% 	\item[(2)] Calculate $\mathbf{x}^{ k+1}, \mathbf{y}^{ k+1}$ and the dual variable $\mathbf{z}^{ k+1}$ via
+% 			\[
+% 			\begin{cases}
+% 		 \mathbf{x}^{ k+1} &= \sign\left( \mathbf{v}^{k} \right) \odot \max \left\{  \left\vert \mathbf{v}^{k} \right\vert -\frac{\lambda}{\beta \Vert \mathbf{v}^{k} \Vert_{\infty} } , 0\right\} ,\\
+% 		 \mathbf{y}^{ k+1} &=  \left(  \mathbf{ I}_{n}  - \frac{1}{\beta } \mathbf{A}^{\top}  \left( \mathbf{I}_m  + \frac{1}{\beta } \mathbf{A}\mathbf{A}^{\top}\right)^{-1}  \mathbf{A}\right)  \left( \frac{\mathbf{A}^{\top} \mathbf{b}}{\beta } + \frac{\mathbf{z}^{k}}{\beta } + \mathbf{x}^{k+1} \right),\\
+% 		\mathbf{z}^{ k+1} &=  \mathbf{z}^{ k} + \beta \left( \mathbf{x}^{ k+1} - \mathbf{y}^{ k+1} \right)  .
+% 	 \end{cases}
+% 	  \]  
+% 	  and update again
+% 	  \[
+% 	  		 \mathbf{x}^{ k+1}_{i} = \mathbf{v}^{k}_{i},~i \in   \mathcal{I}_{\max}\left( \mathbf{v}^{k} \right)
+% 	  \]
+% 		\item[(3)] Update $k = k +1.$
+% 	  \end{itemize}
+% 	}
+%  \KwOut{ 返回 $\mathbf{x}^{ k+1}$.}
+% 	\AlgoBiCaption{迭代加权的截最优化算法}{Iteratively Reweighted Truncated minimization}\label{A:lable}  
+% \end{algorithm}
+
+\begin{algorithm}[th!]
+\SetAlgoLined
+\KwIn{Matrix $\mathbf{A} \in \mathbb{R}^{n \times n}$, number of particles $N$, max iterations $T$, inertia weight $w$, learning factors $c_1, c_2$.}
+
+\textbf{Initialize}: For each particle $i = 1, \dots, N$:
+\begin{itemize}
+    \item Position $\mathbf{x}_i^0 \sim \mathcal{N}(0, 1)$ (normalized: $\mathbf{x}_i^0 \gets \mathbf{x}_i^0 / \|\mathbf{x}_i^0\|_2$).
+    \item Velocity $\mathbf{v}_i^0 = \mathbf{0}$.
+    \item Personal best $\mathbf{p}_i^0 = \mathbf{x}_i^0$, best value $f_i^0 = \text{Rayleigh}(\mathbf{x}_i^0)$.
+\end{itemize}
+Global best $\mathbf{g}^0 = \text{argmin}_{\mathbf{p}_i^0} \{f_1^0, \dots, f_N^0\}$.
+
+\While{ $k < T$}{
+ \begin{itemize}
+ \item[(1)] \textbf{Update Velocity}: For each particle $i$:
+    \[
+    \mathbf{v}_i^{k+1} = w \mathbf{v}_i^k + c_1 r_1 (\mathbf{p}_i^k - \mathbf{x}_i^k) + c_2 r_2 (\mathbf{g}^k - \mathbf{x}_i^k)
+    \]
+    where $r_1, r_2 \sim U(0, 1)$.
+
+ \item[(2)] \textbf{Update Position}: For each particle $i$:
+    \[
+    \mathbf{x}_i^{k+1} = \mathbf{x}_i^k + \mathbf{v}_i^{k+1}
+    \]
+    (Optional: Normalize $\mathbf{x}_i^{k+1} \gets \mathbf{x}_i^{k+1} / \|\mathbf{x}_i^{k+1}\|_2$)
+
+ \item[(3)] \textbf{Update Best Positions}: Calculate fitness $f_i^{k+1} = \frac{(\mathbf{x}_i^{k+1})^\top \mathbf{A} \mathbf{x}_i^{k+1}}{(\mathbf{x}_i^{k+1})^\top \mathbf{x}_i^{k+1}}$:
+    \begin{itemize}
+        \item If $f_i^{k+1} < f_i^k$, then $\mathbf{p}_i^{k+1} = \mathbf{x}_i^{k+1}$ and $f_i^k = f_i^{k+1}$.
+        \item If $f_i^{k+1} < \text{Rayleigh}(\mathbf{g}^k)$, then $\mathbf{g}^{k+1} = \mathbf{x}_i^{k+1}$.
+    \end{itemize}
+
+ \item[(4)] Update $k = k + 1.$
+ \end{itemize}
+}
+\KwOut{ Minimal eigenvalue $\lambda \approx \text{Rayleigh}(\mathbf{g}^T)$ and eigenvector $\mathbf{x} = \mathbf{g}^T$.}
+\AlgoBiCaption{粒子群优化算法求解最小特征值}{Particle Swarm Optimization for eigenvalue problem}\label{A:pso}
+\end{algorithm}
+
+
+\section{Jacobian矩阵}
+
+\begin{algorithm}[th!]
+\SetAlgoLined
+    \KwIn{ 
+        矩阵 $\mathbf{A} \in \mathbb{R}^{n \times n}$, 
+        粒子数量 $N$, 
+        最大迭代次数 ${\tt IterMax}$, 
+        惯性权重 $w$, 
+        加速因子 $c_1$ 和 $c_2$, 
+        容差 $\varepsilon = 10^{-6}$
+    }
+
+    \While{ $k < {\tt IterMax}$ or $\frac{\Vert \mathbf{g}^{k} - \mathbf{g}^{k-1} \Vert_2}{ \Vert \mathbf{g}^{k} \Vert_2} >\varepsilon$ }{
+        \begin{itemize}
+        \item[(1)] \textbf{计算适应度并更新个体最优} \\
+            对于每个粒子 $i = 1, 2, \dots, N$：
+            \[
+                f_i^k = (\mathbf{x}_i^k)^\top \mathbf{A} \mathbf{x}_i^k
+            \]
+            若 $f_i^k < pbest_i$，则更新：
+            \[
+                pbest_i \leftarrow f_i^k, \quad \mathbf{p}_i \leftarrow \mathbf{x}_i^k
+            \]
+
+        \item[(2)] \textbf{更新全局最优} \\
+            找到当前最优粒子：
+            \[
+                i^* = \arg\min_{1 \leq i \leq N} pbest_i
+            \]
+            更新全局最优位置和值：
+            \[
+                \mathbf{g}^k \leftarrow \mathbf{p}_{i^*}, \quad gbest \leftarrow pbest_{i^*}
+            \]
+
+        \item[(3)] \textbf{更新速度与位置} \\
+            对每个粒子 $i = 1, 2, \dots, N$ 执行：
+            \[
+            \begin{cases}
+                \mathbf{v}_i^{k+1} &= w \mathbf{v}_i^k + c_1 r_1 (\mathbf{p}_i - \mathbf{x}_i^k) + c_2 r_2 (\mathbf{g}^k - \mathbf{x}_i^k) \\
+                \mathbf{x}_i^{k+1} &= \mathbf{x}_i^k + \mathbf{v}_i^{k+1}
+            \end{cases}
+            \]
+            \textbf{单位化约束}：
+            \[
+                \mathbf{x}_i^{k+1} \leftarrow \frac{\mathbf{x}_i^{k+1}}{\Vert \mathbf{x}_i^{k+1} \Vert_2}
+            \]
+
+        \item[(4)] 更新 $k = k + 1$
+        \end{itemize}
+    }
+    \KwOut{ 
+        返回最小特征值 $gbest$ 及其对应的单位特征向量 $\mathbf{g}^k$.
+    }
+    \AlgoBiCaption{粒子群优化算法求解最小特征值}{Particle Swarm Optimization for Minimum Eigenvalue}\label{alg:pso_mineig}
+\end{algorithm}
+
+
+\section{向量值函数的性质}
+%https://mp.weixin.qq.com/s/fbj7ZiJJtXBrq00XoWVR_Q
+	\begin{itemize}
+ \setlength{\itemsep}{0pt}
+\setlength{\parsep}{0pt}
+\setlength{\parskip}{0pt}
+	\item[$(1)$] 	设函数$f(x): \mathbb{R}^n \to \mathbb{R}$在点$x$处的Hessian矩阵存在，则
+	\begin{equation*}
+		\mathbf{H}_f\left( x\right)  = \left( \mathbf{J}_{\nabla f}\left( x\right)  \right)^\top.
+	\end{equation*}
+	\item[$(2)$] 设函数$f(x): \mathbb{R}^n \to \mathbb{R}$在点$x$处的一阶梯度存在，对于$\theta \in [ 0,1]$和$x,y \in \rm{dom}(f)$, 则
+	\begin{equation*}
+		\dfrac{\partial f\left( x + \theta (y-x) \right) }{\partial \theta } = \nabla f^\top \left( x + \theta (y-x) \right) \left( y - x \right) .
+	\end{equation*}
+	\item[$(3)$] 设$\mathbf{F} : \mathbb{R}^{n} \rightarrow \mathbb{R}^{m}$和$\mathbf{H} : \mathbb{R}^{n} \rightarrow \mathbb{R}^{n}$的Jacobian矩阵都存在，则其复合函数
+ $\Phi (x) = \left( \mathbf{F} \circ \mathbf{H} \right) (x) = \mathbf{F} \left( \mathbf{H} (x) \right)$的Jacobian矩阵为
+	\begin{equation*}
+		\mathbf{J}_{\Phi}\left( x \right) = \dfrac{\partial \mathbf{F} \left( \mathbf{H} \left( x \right) \right) }{\partial x} = \mathbf{J}_{\mathbf{F}}\left( \mathbf{H} \left( x \right) \right) \cdot \mathbf{J}_{\mathbf{H}}\left( x \right).
+	\end{equation*}
+ 	\item[$(4)$] 设$\mathbf{F} : \mathbb{R}^{n} \rightarrow \mathbb{R}^{m}$和$f : \mathbb{R}^{n} \rightarrow \mathbb{R}$的Jacobian矩阵和梯度都存在，令$\Psi (x) = f(x) \mathbf{F}(x) $,则
+	\begin{equation*}
+		\mathbf{J}_{\Psi}\left( x \right) = \dfrac{\partial  \left( f(x) \mathbf{F}(x) \right) }{\partial x} = f(x) \mathbf{J}_{F}(x) + \mathbf{F}(x) \nabla^{\top} f(x)  .
+	\end{equation*}
+  	\item[$(5)$] 设$\mathbf{F} : \mathbb{R}^{n} \rightarrow \mathbb{R}^{m}$和$\mathbf{G}: \mathbb{R}^{n} \rightarrow \mathbb{R}^{m}$的Jacobian矩阵都存在，则其内积
+   \begin{equation*}
+       \langle \mathbf{F}(x), \mathbf{G}(x) \rangle \triangleq \sum_{i=1}^{m} f_{i}(x) g_{i}(x),~\forall x \in \mathbb{R}^{n}
+   \end{equation*}
+   其中$f_i,g_i : \mathbb{R}^{n} \rightarrow \mathbb{R}$,的导数为
+	\begin{equation*}
+		\nabla \left( \langle \mathbf{F}(x), \mathbf{G}(x) \rangle \right) = \mathbf{F}^{\top}(x) \mathbf{J}_{\mathbf{G}}(x) + \mathbf{G}^{\top}(x) \mathbf{J}_{\mathbf{F}}(x).
+	\end{equation*}
+  	\item[$(6)$] 设$\mathbf{F} : \mathbb{R} \rightarrow \mathbb{R}^{3}$和$\mathbf{G}: \mathbb{R} \rightarrow \mathbb{R}^{3}$的Jacobian矩阵都存在，则其叉积$\mathbf{F} \times \mathbf{G} : \mathbb{R} \rightarrow \mathbb{R}^{3}$的Jacobian矩阵为
+	\begin{equation*}
+		\mathbf{J}_{ \mathbf{F} \times \mathbf{G} } (t)  = \mathbf{J}_{\mathbf{F}}(t) \times \mathbf{G}(t) + \mathbf{F}(t) \times \mathbf{J}_{\mathbf{G}}(t).
+	\end{equation*}
+ 
+\end{itemize}
